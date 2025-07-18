@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import NavFooter from '@/components/NavFooter.vue';
 import NavMain from '@/components/NavMain.vue';
+import NavMainRecursive from '@/components/NavMainParentRecursive.vue';
 import NavUser from '@/components/NavUser.vue';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
@@ -16,17 +17,38 @@ const mainNavItems: NavItem[] = [
     },
     {
         title: 'Dokumen',
-        href: '/dokumen',
         icon: LayoutGrid,
+        children: [
+            { 
+                title: 'Semua Dokumen', 
+                icon: LayoutGrid,
+                children: [
+                    { 
+                        title: 'sub Dokumen 1', 
+                        icon: LayoutGrid,
+                        href: '/semua-dokumen' },
+                    { 
+                        title: 'sub Arsip 1',
+                        icon: LayoutGrid,
+                        href: '/dokumen-a' 
+                    },
+                ] 
+            },
+            { 
+                title: 'Kategori',
+                icon: LayoutGrid,
+                href: '/dokumen/kategori' 
+            },
+        ]
     },
 ];
 
 const footerNavItems: NavItem[] = [
-    // {
-    //     title: 'Github Repo',
-    //     href: 'https://github.com/laravel/vue-starter-kit',
-    //     icon: Folder,
-    // },
+    {
+        title: 'Administrator',
+        href: '/admin/dashboards',
+        icon: Folder,
+    },
     // {
     //     title: 'Documentation',
     //     href: 'https://laravel.com/docs/starter-kits#vue',
@@ -50,11 +72,12 @@ const footerNavItems: NavItem[] = [
         </SidebarHeader>
 
         <SidebarContent>
-            <NavMain :items="mainNavItems" />
+            <NavMainRecursive :items="mainNavItems" />
         </SidebarContent>
 
         <SidebarFooter>
-            <NavFooter :items="footerNavItems" />
+            <!-- <NavFooter :items="footerNavItems" /> -->
+            <NavMain :items="footerNavItems" />
             <NavUser />
         </SidebarFooter>
     </Sidebar>

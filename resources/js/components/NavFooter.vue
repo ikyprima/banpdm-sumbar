@@ -5,6 +5,7 @@ import { type NavItem } from '@/types';
 interface Props {
     items: NavItem[];
     class?: string;
+    target?: string;
 }
 
 defineProps<Props>();

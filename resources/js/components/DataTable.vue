@@ -59,12 +59,22 @@ const props = defineProps<{
   paginationLinks : any[]
   firstPageUrl: string,
   lastPageUrl: string,
+  buttonTambah?: any[]
+  buttonDinamis?: DynamicButton[]
 //   columns: ColumnDef<any>[]
 }>()
 
 interface ColumnMeta {
   size?: string
 }
+
+interface DynamicButton {
+  label: string
+  variant?: string
+  value?: string
+  onClick?: string
+}
+
 
 const dynamicColumns: ColumnDef<any>[] = props.fieldsFromDB.map(field => {
   switch (field.key) {
@@ -221,9 +231,18 @@ const isEllipsis = (label: string) => {
   return label.includes('...')
 }
 
-const emit = defineEmits(['previews','downloads','edits', 'delete','clickPaging','search'])
+const emit = defineEmits(['previews','downloads','edits', 'delete','clickPaging','search','button-click'])
 function handePreview(id: Object) {
   emit('previews', id) 
+}
+
+
+function handleClick(handlerName?: string, value?: any) {
+  if (!handlerName) return
+  emit("button-click",{
+    action: handlerName,
+    value
+  } )
 }
 function handleEdit(id: string) {
    emit('edits', id) 
@@ -251,6 +270,20 @@ watchEffect(() => {
     }))
   }
 })
+// function handleClick(handlerName?: string) {
+//   if (!handlerName) return
+
+//   const handlers: Record<string, () => void> = {
+//     handleTambah: () => console.log('Tambah diklik'),
+//     handleHapus: () => console.log('Hapus diklik'),
+//   }
+
+//   if (handlers[handlerName]) {
+//     handlers[handlerName]()
+//   } else {
+//     console.warn(`Handler ${handlerName} tidak ditemukan.`)
+//   }
+// }
 
 </script>
 
@@ -263,7 +296,7 @@ watchEffect(() => {
         v-model="searchQuery"
         @keyup.enter="handleSearch"
       />
-      <DropdownMenu>
+        <DropdownMenu>
         <DropdownMenuTrigger as-child>
           <Button variant="outline" class="ml-auto">
             Columns <ChevronDown class="ml-2 h-4 w-4" />
@@ -281,6 +314,19 @@ watchEffect(() => {
           </DropdownMenuCheckboxItem>
         </DropdownMenuContent>
       </DropdownMenu>
+
+      <Button class="gap-2 ml-2" v-if="props.buttonTambah && props.buttonTambah.length > 0" >Tambah</Button>
+      <div v-if="props.buttonDinamis">
+        <Button
+          class="gap-2 ml-2"
+            v-for="(btn, idx) in props.buttonDinamis"
+            :key="idx"
+            @click="handleClick(btn.onClick, btn.value??'')"
+          >
+          {{ btn.label }}
+        </Button>
+      </div>
+    
     </div>
     <div class="rounded-md border w-full overflow-x-auto">
       <Table class="">

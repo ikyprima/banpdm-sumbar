@@ -6,7 +6,7 @@ import { resolve } from 'node:path';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
-    base: '/layanan-bpkad/build/',
+    // base: '/layanan-bpkad/build/',
     plugins: [
         laravel({
             input: ['resources/js/app.ts'],

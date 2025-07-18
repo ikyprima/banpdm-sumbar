@@ -205,14 +205,17 @@ function handleSearch(search: string) {
                   </thead>
                   <tbody>
                     <tr v-for="row in 8" :key="row" class="border-b">
-                      <div class="flex items-center space-x-4">
-                            <Skeleton class="h-12 w-12 rounded-full" />
-                            <div class="space-y-2">
-                              <Skeleton class="h-5 min-w-2/3" />
-                              <Skeleton class="h-2 w-[500px]" />
-                            </div>
-                          </div>  
+                      <td>
+                        <div class="flex items-center space-x-4">
+                          <Skeleton class="h-12 w-12 rounded-full" />
+                          <div class="space-y-2">
+                            <Skeleton class="h-5 min-w-2/3" />
+                            <Skeleton class="h-2 w-[500px]" />
+                          </div>
+                        </div>
+                      </td>
                     </tr>
+
                   </tbody>
                   <tfoot>
                     <tr class="border-b ">
