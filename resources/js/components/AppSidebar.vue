@@ -16,45 +16,31 @@ const mainNavItems: NavItem[] = [
         icon: LayoutGrid,
     },
     {
-        title: 'Dokumen',
+        title: 'Master',
         icon: LayoutGrid,
         children: [
+        
             { 
-                title: 'Semua Dokumen', 
+                title: 'Asesor',
                 icon: LayoutGrid,
-                children: [
-                    { 
-                        title: 'sub Dokumen 1', 
-                        icon: LayoutGrid,
-                        href: '/semua-dokumen' },
-                    { 
-                        title: 'sub Arsip 1',
-                        icon: LayoutGrid,
-                        href: '/dokumen-a' 
-                    },
-                ] 
-            },
-            { 
-                title: 'Kategori',
-                icon: LayoutGrid,
-                href: '/dokumen/kategori' 
+                href: '/' 
             },
         ]
     },
 ];
 
-const footerNavItems: NavItem[] = [
-    {
-        title: 'Administrator',
-        href: '/admin/dashboards',
-        icon: Folder,
-    },
+// const footerNavItems: NavItem[] = [
+//     {
+//         title: 'Administrator',
+//         href: '/admin/dashboards',
+//         icon: Folder,
+//     },
     // {
     //     title: 'Documentation',
     //     href: 'https://laravel.com/docs/starter-kits#vue',
     //     icon: BookOpen,
     // },
-];
+// ];
 </script>
 
 <template>

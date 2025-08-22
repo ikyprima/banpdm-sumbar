@@ -1,0 +1,30 @@
+{
+    "name": "nwidart/banpdm",
+    "description": "",
+    "authors": [
+        {
+            "name": "Nicolas Widart",
+            "email": "n.widart@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {
+
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Banpdm\\": "app/",
+            "Modules\\Banpdm\\Database\\Factories\\": "database/factories/",
+            "Modules\\Banpdm\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\Banpdm\\Tests\\": "tests/"
+        }
+    }
+}

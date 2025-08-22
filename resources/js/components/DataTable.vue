@@ -75,90 +75,127 @@ interface DynamicButton {
   onClick?: string
 }
 
-
 const dynamicColumns: ColumnDef<any>[] = props.fieldsFromDB.map(field => {
-  switch (field.key) {
-      case 'select':
-      return {
-          id: 'select',
-          header: ({ table }) =>
-            h(Checkbox, {
-              modelValue: table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate'),
-              'onUpdate:modelValue': value => table.toggleAllPageRowsSelected(!!value),
-            }),
-          cell: ({ row }) =>
-            h(Checkbox, {
-              modelValue: row.getIsSelected(),
-              'onUpdate:modelValue': value => row.toggleSelected(!!value),
-            }),
-          enableSorting: false,
-          enableHiding: false,
-      }
-    case 'status':
-      return {
-        accessorKey: field.key,
-        header: field.sortable
-          ? ({ column }) =>
-              h(Button, {
-                variant: 'ghost',
-                onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-              }, () => [field.label, h(ArrowUpDown, { class: 'ml-2 h-4 w-4' })])
-          : () => h('div', { class: 'text-left' }, field.label),
-        cell: ({ row }) => h('div', { class: 'capitalize' }, row.getValue(field.key)),
-        enableSorting: field.sortable,
-      }
+  // Cek kalau key mengandung titik (nested relation)
+  if (field.key.includes('.')) {
+    const pathParts = field.key.split('.');
 
-    case 'email':
-      return {
-        accessorKey: field.key,
-          header: field.sortable
-          ? ({ column }) =>
-              h(Button, {
-                variant: 'ghost',
-                onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-              }, () => [field.label, h(ArrowUpDown, { class: 'ml-2 h-4 w-4' })])
-          : () => h('div', {}, field.label), 
-        cell: ({ row }) => h('div', { class: 'lowercase' }, row.getValue(field.key)),
-        enableSorting: field.sortable,
-      }
-
-    case 'amount':
-      return {
-        accessorKey: field.key,
-        header: field.sortable
+    return {
+      id: field.key,
+      accessorFn: (row) => {
+        return pathParts.reduce((acc : any, key : string) => acc?.[key], row) ?? '';
+      },
+      header: field.sortable
         ? ({ column }) =>
             h(Button, {
+              variant: 'ghost',
+              onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
+            }, () => [field.label, h(ArrowUpDown, { class: 'ml-2 h-4 w-4' })])
+        : () => h('div', {}, field.label),
+      cell: ({ getValue }) =>
+        h('div', { class: 'break-words max-w-[200px] whitespace-normal' }, String(getValue?.()) ?? '-'),
+      enableSorting: field.sortable,
+    };
+  }
+
+  // Default handler kalau bukan relasi
+  return {
+    accessorKey: field.key,
+    header: field.sortable
+      ? ({ column }) =>
+          h(Button, {
             variant: 'ghost',
             onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-            }, () => [field.label, h(ArrowUpDown, { class: 'ml-2 h-4 w-4 text-right' })])
-        : () => h('div', { class: 'text-right' }, field.label),
-        
-        cell: ({ row }) => {
-          const amount = Number(row.getValue(field.key))
-          const formatted = new Intl.NumberFormat('en-US', {
-            style: 'currency',
-            currency: 'USD',
-          }).format(amount)
-          return h('div', { class: 'text-right font-medium' }, formatted)
-        },
-        enableSorting: field.sortable,
-      }
+          }, () => [field.label, h(ArrowUpDown, { class: 'ml-2 h-4 w-4' })])
+      : () => h('div', {}, field.label),
+    cell: ({ row }) =>
+      h('div', { class: 'break-words max-w-[200px] whitespace-normal' }, row.getValue(field.key)),
+    enableSorting: field.sortable,
+  };
+});
+// const dynamicColumns: ColumnDef<any>[] = props.fieldsFromDB.map(field => {
+//   switch (field.key) {
+//       case 'select':
+//       return {
+//           id: 'select',
+//           header: ({ table }) =>
+//             h(Checkbox, {
+//               modelValue: table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate'),
+//               'onUpdate:modelValue': value => table.toggleAllPageRowsSelected(!!value),
+//             }),
+//           cell: ({ row }) =>
+//             h(Checkbox, {
+//               modelValue: row.getIsSelected(),
+//               'onUpdate:modelValue': value => row.toggleSelected(!!value),
+//             }),
+//           enableSorting: false,
+//           enableHiding: false,
+//       }
+//     case 'status':
+//       return {
+//         accessorKey: field.key,
+//         header: field.sortable
+//           ? ({ column }) =>
+//               h(Button, {
+//                 variant: 'ghost',
+//                 onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
+//               }, () => [field.label, h(ArrowUpDown, { class: 'ml-2 h-4 w-4' })])
+//           : () => h('div', { class: 'text-left' }, field.label),
+//         cell: ({ row }) => h('div', { class: 'capitalize' }, row.getValue(field.key)),
+//         enableSorting: field.sortable,
+//       }
 
-    default:
-      return {
-        accessorKey: field.key,
-        header: field.sortable
-          ? ({ column }) =>
-              h(Button, {
-                variant: 'ghost',
-                onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-              }, () => [field.label, h(ArrowUpDown, { class: 'ml-2 h-4 w-4' })])
-          :  () => h('div', {}, field.label),
-        cell: ({ row }) => h('div', {class: 'break-words max-w-[200px] whitespace-normal'}, row.getValue(field.key)),
-        enableSorting: field.sortable, 
-      }
-  }
-})
+//     case 'email':
+//       return {
+//         accessorKey: field.key,
+//           header: field.sortable
+//           ? ({ column }) =>
+//               h(Button, {
+//                 variant: 'ghost',
+//                 onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
+//               }, () => [field.label, h(ArrowUpDown, { class: 'ml-2 h-4 w-4' })])
+//           : () => h('div', {}, field.label), 
+//         cell: ({ row }) => h('div', { class: 'lowercase' }, row.getValue(field.key)),
+//         enableSorting: field.sortable,
+//       }
+
+//     case 'amount':
+//       return {
+//         accessorKey: field.key,
+//         header: field.sortable
+//         ? ({ column }) =>
+//             h(Button, {
+//             variant: 'ghost',
+//             onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
+//             }, () => [field.label, h(ArrowUpDown, { class: 'ml-2 h-4 w-4 text-right' })])
+//         : () => h('div', { class: 'text-right' }, field.label),
+        
+//         cell: ({ row }) => {
+//           const amount = Number(row.getValue(field.key))
+//           const formatted = new Intl.NumberFormat('en-US', {
+//             style: 'currency',
+//             currency: 'USD',
+//           }).format(amount)
+//           return h('div', { class: 'text-right font-medium' }, formatted)
+//         },
+//         enableSorting: field.sortable,
+//       }
+
+//     default:
+//       return {
+//         accessorKey: field.key,
+//         header: field.sortable
+//           ? ({ column }) =>
+//               h(Button, {
+//                 variant: 'ghost',
+//                 onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
+//               }, () => [field.label, h(ArrowUpDown, { class: 'ml-2 h-4 w-4' })])
+//           :  () => h('div', {}, field.label),
+//         cell: ({ row }) => h('div', {class: 'break-words max-w-[200px] whitespace-normal'}, row.getValue(field.key)),
+//         enableSorting: field.sortable, 
+//       }
+//   }
+// })
 
 const columns: ColumnDef<any,ColumnMeta>[] = [
   // {

@@ -1,0 +1,11 @@
+{
+    "name": "Banpdm",
+    "alias": "banpdm",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Banpdm\\Providers\\BanpdmServiceProvider"
+    ],
+    "files": []
+}
