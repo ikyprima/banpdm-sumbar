@@ -29,18 +29,18 @@ const mainNavItems: NavItem[] = [
     },
 ];
 
-// const footerNavItems: NavItem[] = [
-//     {
-//         title: 'Administrator',
-//         href: '/admin/dashboards',
-//         icon: Folder,
-//     },
+const footerNavItems: NavItem[] = [
+    // {
+    //     title: 'Administrator',
+    //     href: '/admin/dashboards',
+    //     icon: Folder,
+    // },
     // {
     //     title: 'Documentation',
     //     href: 'https://laravel.com/docs/starter-kits#vue',
     //     icon: BookOpen,
     // },
-// ];
+];
 </script>
 
 <template>
